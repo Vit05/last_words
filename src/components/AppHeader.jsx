@@ -8,11 +8,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {Divider, Drawer, List, Menu, MenuItem} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {signOut} from 'firebase/auth';
-
+import { onAuthStateChanged } from 'firebase/auth';
 import {auth} from '../firebase';
-import {clearUser} from '../store/authSlice';
+import {clearUser, setUser} from '../store/authSlice';
 import {AccountCircle} from "@mui/icons-material";
 import {Link, useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 
 const drawerWidth = 240;
@@ -35,10 +36,23 @@ const NavigationLinks = () => {
 export default function AppHeader() {
 
     const user = useSelector((state) => state.auth.user);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                dispatch(setUser(user));
+            } else {
+                dispatch(clearUser());
+            }
+        });
+
+        return unsubscribe;
+    }, [dispatch]);
 
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
@@ -131,6 +145,9 @@ export default function AppHeader() {
                                     </MenuItem>
                                     <MenuItem component={Link} to={"/dashboard"} onClick={handleClose}>
                                         <Typography>Dashboard</Typography>
+                                    </MenuItem>
+                                    <MenuItem component={Link} to={"/wills"} onClick={handleClose}>
+                                        <Typography>Wills</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleLogout}>
                                         <Typography>Logout</Typography>
