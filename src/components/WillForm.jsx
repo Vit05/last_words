@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {
@@ -9,13 +9,13 @@ import {
     Stepper,
     Step,
     StepLabel,
-    TextField,
-    Alert
+    Alert, Paper
 } from '@mui/material';
 
 import {addRecord, updateRecord, clearRecordError} from '../store/authSlice';
 import AddresseesList from "./AddresseesList.jsx";
 import TrusteesList from "./TrusteesList.jsx";
+import RichTextEditor from "./RichTextEditor.jsx";
 
 const steps = ['How to create Will', 'Write the will.', 'Specify the Addressees', 'Specify the trustees'];
 
@@ -31,14 +31,20 @@ function WillForm() {
         isEditing ? state.auth.records.find(record => record.id === recordId) : null
     );
 
-    const [addresseesRecords, setAddresseesRecords] = useState(existingRecord?.addresseesRecords || [{name: "", email: ""}]);
-    const [trusteesRecords, setTrusteesRecords] = useState(existingRecord?.trusteesRecords || [{name: "", email: "", phone:""}]);
+    const [isSectionValid, setIsSectionValid] = useState(true);
+    const [addresseesRecords, setAddresseesRecords] = useState(existingRecord?.addresseesRecords || [{index:0, name: "", email: ""}]);
+    const [willContent, setWillContent] = useState(existingRecord?.desc || "");
+    const [trusteesRecords, setTrusteesRecords] = useState(existingRecord?.trusteesRecords || [{index:0, name: "", email: "", phone:""}]);
     const [recordData, setRecordData] = useState(
         isEditing ?
             existingRecord
             : {name: '', desc: '', addresseesRecords: addresseesRecords, trusteesRecords: trusteesRecords}
     );
 
+
+    const handleStepValidation = (newValue) => {
+        setIsSectionValid(newValue);
+    };
     const handleUpdateAddresseesRecords = (newRecords) => {
         setAddresseesRecords(newRecords);
     };
@@ -53,12 +59,14 @@ function WillForm() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleInputChange = (e) => {
+    const onWillContentChanged = (willContent, isValid)=>{
+        setWillContent(willContent)
         setRecordData({
             ...recordData,
-            [e.target.name]: e.target.value,
+            desc: willContent,
         });
-    };
+        setIsSectionValid(isValid)
+    }
 
     const handleSubmit = () => {
         if (isEditing) {
@@ -75,13 +83,14 @@ function WillForm() {
         }
     };
 
+
+
     const getStepContent = (step) => {
         switch (step) {
             case 0:
                 return (
                     <Box sx={{mb: 2}}>
-
-                        <h3> In order to leave a will you need to:</h3>
+                        <Typography variant={"h5"} mb={3}>In order to leave a will you need to:</Typography>
                         <ol>
                             <li><span>Write a will</span></li>
                             <li><span>Specify to whom it will be addressed</span></li>
@@ -95,41 +104,30 @@ function WillForm() {
             case 1:
                 return (
                     <Box sx={{mb: 2}}>
-                        <Typography variant={"h3"}>Write the will</Typography>
+                        <Typography variant={"h5"} mb={3}>Write the will</Typography>
 
-                        <TextField
-                            label="Name"
-                            name="name"
-                            fullWidth
-                            margin="normal"
-                            value={recordData.name}
-                            onChange={handleInputChange}
-                        />
-                        <TextField
-                            label="Description"
-                            name="desc"
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={4}
-                            value={recordData.desc}
-                            onChange={handleInputChange}
-                        />
+                       <Box>
+                           <RichTextEditor handleWill={onWillContentChanged}
+                                           existingWill={willContent}/>
+                       </Box>
                     </Box>
                 );
             case 2:
                 return (
                     <Box sx={{mb: 2}}>
-                        <Typography variant={"h3"}>Specify the Addressee</Typography>
-                        <AddresseesList existingRecords={addresseesRecords} onRecordsChange={handleUpdateAddresseesRecords}/>
+                        <Typography variant={"h5"} mb={3}>Specify the Addressee</Typography>
+                        <AddresseesList existingRecords={addresseesRecords}
+                                        onRecordsChange={handleUpdateAddresseesRecords}
+                                        onValidStep={handleStepValidation}/>
                     </Box>
                 );
             case 3:
                 return (
                     <Box sx={{mb: 2}}>
-                        <Typography variant={"h3"}>Specify the Trustees</Typography>
-                        <TrusteesList existingRecords={trusteesRecords} onRecordsChange={handleUpdateTrusteesRecords}/>
-                        {/* ... display recordData for confirmation ... */}
+                        <Typography variant={"h5"} mb={3}>Specify the Trustees</Typography>
+                        <TrusteesList existingRecords={trusteesRecords}
+                                      onRecordsChange={handleUpdateTrusteesRecords}
+                                      onValidStep={handleStepValidation}/>
                     </Box>
                 );
             default:
@@ -139,6 +137,13 @@ function WillForm() {
 
     const [activeStep, setActiveStep] = useState(0);
 
+
+    useEffect(() => {
+        if(activeStep === 0) {
+            setIsSectionValid(true)
+        }
+
+    },[activeStep, handleNext])
     return (
         <Container maxWidth="md">
             <Typography variant="h4" component="h1" gutterBottom>
@@ -160,18 +165,20 @@ function WillForm() {
                     </Typography>
                 ) : (
                     <>
-                        {getStepContent(activeStep)}
+                        <Paper square={false} sx={{padding: 4}}>
+                            {getStepContent(activeStep)}
+                        </Paper>
                         {error && <Alert severity="error" onClose={() => dispatch(clearRecordError())}>{error}</Alert>}
-                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Box sx={{display: 'flex', justifyContent: 'space-between', paddingY: 3}}>
                             <Button disabled={activeStep === 0} onClick={handleBack}>
                                 Back
                             </Button>
                             {activeStep === steps.length - 1 ? (
-                                <Button variant="contained" onClick={handleSubmit} disabled={isLoading}>
+                                <Button disabled={!isSectionValid || isLoading} variant="contained" onClick={handleSubmit}>
                                     {isLoading ? 'Submitting...' : isEditing ? 'Update Record' : 'Submit'}
                                 </Button>
                             ) : (
-                                <Button variant="contained" onClick={handleNext}>
+                                <Button disabled={!isSectionValid} variant="contained" onClick={handleNext}>
                                     Next
                                 </Button>
                             )}

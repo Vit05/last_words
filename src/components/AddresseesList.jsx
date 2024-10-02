@@ -1,61 +1,71 @@
-import React, {useState} from 'react';
-import {TextField, Button, Box, IconButton, Typography} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {TextField, Button, Box, IconButton, Stack, Divider} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const AddresseesList = ({existingRecords, onRecordsChange, isTrustees}) => {
+const AddresseesList = ({existingRecords, onRecordsChange, onValidStep}) => {
     const [records, setRecords] = useState(existingRecords || [{index: 0, name: '', email: ''}]);
     const [errors, setErrors] = useState({});
 
     // Validate input for a single record
-    const validate = (record) => {
+    const validate = (record, index) => {
         let isValid = true;
         let error = {};
 
         // Name validation
-        if (!record.name.trim()) {
-            error.name = 'Name is required';
+        if(record.name && record.name.trim().length > 0){
+            if (!record.name.trim()) {
+                error.name = 'Name is required';
+                isValid = false;
+            }
+        }else{
             isValid = false;
         }
+
+
 
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!record.email.trim()) {
-            error.email = 'Email is required';
-            isValid = false;
-        } else if (!emailRegex.test(record.email)) {
-            error.email = 'Invalid email format';
+        if(record.email && record.email.trim().length > 0){
+            if (!record.email.trim()) {
+                error.email = 'Email is required';
+                isValid = false;
+            } else if (!emailRegex.test(record.email)) {
+                error.email = 'Invalid email format';
+                isValid = false;
+            }
+        }else{
             isValid = false;
         }
 
-        return {isValid, error};
+
+        // Update error state for the specific record
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [index]: error,
+        }));
+
+        return isValid;
     };
 
-    // Handle input change for each record
     const handleChange = (e, index) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         const updatedRecords = [...records];
-        updatedRecords[index] = {...updatedRecords[index], [name]: value};
+        updatedRecords[index] = { ...updatedRecords[index], [name]: value };
         setRecords(updatedRecords);
         onRecordsChange(updatedRecords); // Notify parent of the change
-
     };
 
-    // Add a new record
+    const handleBlur = (index) => {
+        validate(records[index], index); // Trigger validation onBlur
+    };
+
     const handleAddRecord = () => {
-        const lastRecord = records[records.length - 1];
-        const validation = validate(lastRecord);
-
-        if (validation.isValid) {
-            const newRecords = [...records, { index: records.length, name: '', email: '' }];
-            setRecords(newRecords);
-            onRecordsChange(newRecords); // Notify parent of the change
-            setErrors({});
-        } else {
-            setErrors((prevErrors) => ({ ...prevErrors, [lastRecord.index]: validation.error }));
-        }
+        const newRecords = [...records, { index: records.length, name: '', email: '' }];
+        setRecords(newRecords);
+        onRecordsChange(newRecords); // Notify parent of the change
+        setErrors({});
     };
 
-    // Delete a record except for the first one
     const handleDeleteRecord = (index) => {
         if (index !== 0) {
             const newRecords = records.filter((_, i) => i !== index);
@@ -64,52 +74,70 @@ const AddresseesList = ({existingRecords, onRecordsChange, isTrustees}) => {
         }
     };
 
-    return (
+    useEffect(() => {
+        const lastIndex = records.length - 1;
+        const lastRecord = records[lastIndex];
+        const validation = validate(lastRecord, lastIndex);
+        onValidStep(validation);
+    }, [records, onValidStep]); // Watch for changes in records
+ return (
         <Box>
-            <Typography variant="h5" gutterBottom>
-                Dynamic Records
-            </Typography>
-
             {records.map((record, index) => (
-                <Box key={index} mb={2} display="flex" alignItems="center">
-                    <TextField
-                        label="Name"
-                        name="name"
-                        value={record.name}
-                        onChange={(e) => handleChange(e, index)}
-                        error={!!(errors[index] && errors[index].name)}
-                        helperText={errors[index]?.name}
-                        sx={{mr: 2}}
-                    />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        value={record.email}
-                        onChange={(e) => handleChange(e, index)}
-                        error={!!(errors[index] && errors[index].email)}
-                        helperText={errors[index]?.email}
-                        sx={{mr: 2}}
-                    />
-                    {index !== 0 && (
-                        <IconButton
-                            onClick={() => handleDeleteRecord(index)}
-                            aria-label="delete"
-                            color="secondary"
-                        >
-                            <DeleteIcon/>
-                        </IconButton>
-                    )}
-                </Box>
+                <Stack key={index}
+                       sx={{paddingBottom: 1, borderBottom:"2px solid #cdcdcd", marginBottom: 3, alignItems: 'center'}}
+                       direction="row"
+                       spacing={2}>
+
+                    <Box sx={{width: '45%'}}>
+                        <TextField
+                            label="Full Name"
+                            name="name"
+                            fullWidth
+                            value={record.name}
+                            onChange={(e) => handleChange(e, index)}
+                            onBlur={() => handleBlur(index)} // Trigger validation on blur
+                            error={!!errors[index]?.name} // Only show error if validation fails
+                            helperText={errors[index]?.name} // Show error message after blur
+                        />
+                    </Box>
+                    <Box sx={{width: "45%"}}>
+                        <TextField
+                            label="Email"
+                            name="email"
+                            fullWidth
+                            value={record.email}
+                            onChange={(e) => handleChange(e, index)}
+                            onBlur={() => handleBlur(index)} // Trigger validation on blur
+                            error={!!errors[index]?.email} // Only show error if validation fails
+                            helperText={errors[index]?.email} // Show error message after blur
+                        />
+                    </Box>
+                    <Box sx={{width:'5%'}}>
+                        {index !== 0 && (
+                            <IconButton
+                                onClick={() => handleDeleteRecord(index)}
+                                aria-label="delete"
+                                color="secondary">
+                                <DeleteIcon/>
+                            </IconButton>
+                        )}
+                    </Box>
+                    <Divider sx={{paddingY:1, backgroundColor: "#000000"}}/>
+                </Stack>
             ))}
 
             <Button variant="contained" color="primary" onClick={handleAddRecord} sx={{mt: 2}}>
-                Add New Record
+                Add New Addressee
             </Button>
 
-            <Box mt={4}>
-                <Typography variant="h6">Records Array (for debugging)</Typography>
-                <pre>{JSON.stringify(records, null, 2)}</pre>
-            </Box>
+            {/*<Box mt={4}>*/}
+            {/*    <Typography variant="h6">Records Array (for debugging)</Typography>*/}
+            {/*    <pre>{JSON.stringify(records, null, 2)}</pre>*/}
+            {/*</Box>*/}
+            {/*<Box mt={4}>*/}
+            {/*    <Typography variant="h6">Errors:</Typography>*/}
+            {/*    <pre>{JSON.stringify(errors, null, 2)}</pre>*/}
+            {/*</Box>*/}
         </Box>
     );
 };
