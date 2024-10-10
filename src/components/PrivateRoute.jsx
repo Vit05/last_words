@@ -36,7 +36,7 @@ const PrivateRoute = ({ children }) => {
     }
 
     // If the user is authenticated, render the child components; otherwise, redirect
-    return currentUser ? children : <Navigate to="/" />;
+    return currentUser ? children : <Navigate to="/last_words" />;
 };
 
 export default PrivateRoute;

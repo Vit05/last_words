@@ -47,7 +47,7 @@ function WillsList() {
             <Box sx={{paddingBottom: 2}}>
                 <Button
                     variant="contained"
-                    onClick={() => navigate('/wills/new')} // Navigate to /records/new to add a new record
+                    onClick={() => navigate('/last_words/wills/new')} // Navigate to /records/new to add a new record
                 >Start Adding New Will</Button>
             </Box>
 
@@ -74,10 +74,10 @@ function WillsList() {
                         </CardContent>
                         <CardActions sx={{display: 'flex', justifyContent: 'space-between'}}>
                             <Box>
-                                <Button size="large" component={Link} to={`/wills/${record.id}`}>Read more</Button>
+                                <Button size="large" component={Link} to={`/last_words/wills/${record.id}`}>Read more</Button>
                             </Box>
                             <Box>
-                                <IconButton component={Link} to={`/wills/${record.id}/edit`}>
+                                <IconButton component={Link} to={`/last_words/wills/${record.id}/edit`}>
                                     <EditIcon/>
                                 </IconButton>
                                 <IconButton onClick={() => handleDelete(record.id)}>

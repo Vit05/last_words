@@ -22,7 +22,7 @@ function WillDetails() {
     const handleDelete = () => {
         dispatch(deleteRecord(recordId))
             .then(() => {
-                navigate('/wills'); // Navigate back to the list after deletion
+                navigate('/last_words/wills'); // Navigate back to the list after deletion
             });
     };
 
@@ -49,7 +49,7 @@ function WillDetails() {
                         </Typography>
                     </Box>
                     <Box>
-                        <Button component={Link} to={`/wills/${record.id}/edit`} variant="contained" sx={{ mt: 2 }}>
+                        <Button component={Link} to={`/last_words/wills/${record.id}/edit`} variant="contained" sx={{ mt: 2 }}>
                             Edit
                         </Button>
                         <Button onClick={handleDelete} variant="outlined" color="error" sx={{ mt: 2, ml: 2 }}>

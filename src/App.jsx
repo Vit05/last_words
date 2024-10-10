@@ -89,14 +89,14 @@ function App() {
                 <Box marginTop={9} paddingBottom={5}>
                     <Container maxWidth="md">
                         <Routes>
-                            <Route path="/login" element={<Login/>}/>
-                            <Route path="/signup" element={<Signup/>}/>
-                            <Route path="/about-us" element={<About/>}/>
-                            <Route path="/how-it-works" element={<HowItWorks/>}/>
-                            <Route path="/faq" element={<Faq/>}/>
-                            <Route path="/" element={<Home/>}/>
+                            <Route path="/last_words/login" element={<Login/>}/>
+                            <Route path="/last_words/signup" element={<Signup/>}/>
+                            <Route path="/last_words/about-us" element={<About/>}/>
+                            <Route path="/last_words/how-it-works" element={<HowItWorks/>}/>
+                            <Route path="/last_words/faq" element={<Faq/>}/>
+                            <Route path="/last_words/" element={<Home/>}/>
                             {/*<Route*/}
-                            {/*    path="/dashboard"*/}
+                            {/*    path="/last_words/dashboard"*/}
                             {/*    element={*/}
                             {/*        <PrivateRoute>*/}
                             {/*            <Dashboard/>*/}
@@ -104,32 +104,32 @@ function App() {
                             {/*    }*/}
                             {/*/>*/}
                             {/*<Route*/}
-                            {/*    path="/profile"*/}
+                            {/*    path="/last_words/profile"*/}
                             {/*    element={*/}
                             {/*        <PrivateRoute>*/}
                             {/*            <Profile/>*/}
                             {/*        </PrivateRoute>*/}
                             {/*    }*/}
                             {/*/>*/}
-                            <Route path="/wills" element={
+                            <Route path="/last_words/wills" element={
                                 <PrivateRoute>
                                     <WillsList />
                                 </PrivateRoute>
                             }
                             />
-                            <Route path="/wills/new" element={
+                            <Route path="/last_words/wills/new" element={
                                 <PrivateRoute>
                                     <WillForm />
                                 </PrivateRoute>
                             }
                             />
-                            <Route path="/wills/:recordId" element={
+                            <Route path="/last_words/wills/:recordId" element={
                                 <PrivateRoute>
                                     <WillDetails />
                                 </PrivateRoute>
                             }
                             />
-                            <Route path="/wills/:recordId/edit" element={
+                            <Route path="/last_words/wills/:recordId/edit" element={
                                 <PrivateRoute>
                                     <WillForm />
                                 </PrivateRoute>

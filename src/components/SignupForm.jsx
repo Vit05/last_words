@@ -40,7 +40,7 @@ function SignupForm() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(userCredential.user, { displayName });
             dispatch(setUser(userCredential.user));
-            navigate('/');
+            navigate('/last_words');
         } catch (error) {
             dispatch(setError(error.message));
         }

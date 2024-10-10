@@ -36,7 +36,7 @@ function LoginForm() {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             dispatch(setUser(userCredential.user));
-            navigate('/');
+            navigate('/last_words');
         } catch (error) {
             dispatch(setError(error.message));
         }
@@ -55,7 +55,7 @@ function LoginForm() {
             <PageHeadTitle title={"Welcome back."} subtitle={headSubtitle}/>
             <Box>
                 <Typography component="p" variant="body1">
-                    First time at Leve Last Words? <Typography component={Link} to={'/signup'}>Sign up</Typography>
+                    First time at Leve Last Words? <Typography component={Link} to={'/last_words/signup'}>Sign up</Typography>
                 </Typography>
             </Box>
             <Box sx={{marginTop: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>

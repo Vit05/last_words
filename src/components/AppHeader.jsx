@@ -19,10 +19,10 @@ import {useEffect} from "react";
 const drawerWidth = 240;
 
 const pages = [
-    {path: "/", name: 'Home'},
-    {path: "/how-it-works", name: 'How It Works'},
-    {path: "/faq", name: 'FAQ'},
-    {path: "/about-us", name: 'About Us'},
+    {path: "/last_words/", name: 'Home'},
+    {path: "/last_words/how-it-works", name: 'How It Works'},
+    {path: "/last_words/faq", name: 'FAQ'},
+    {path: "/last_words/about-us", name: 'About Us'},
     // {path: "/contacts", name: 'Contacts'}
 ];
 
@@ -83,7 +83,7 @@ export default function AppHeader() {
             await signOut(auth);
             dispatch(clearUser());
             handleClose()
-            navigate('/'); // Redirect to login after logout
+            navigate('/last_words'); // Redirect to login after logout
         } catch (error) {
             console.error('Error logging out:', error);
             // Handle logout error (e.g., display an error message)
@@ -146,7 +146,7 @@ export default function AppHeader() {
                                     {/*<MenuItem component={Link} to={"/dashboard"} onClick={handleClose}>*/}
                                     {/*    <Typography variant={"button"}>Dashboard</Typography>*/}
                                     {/*</MenuItem>*/}
-                                    <MenuItem component={Link} to={"/wills"} onClick={handleClose}>
+                                    <MenuItem component={Link} to={"/last_words/wills"} onClick={handleClose}>
                                         <Typography variant={"button"}>Wills</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleLogout}>
@@ -155,7 +155,7 @@ export default function AppHeader() {
                                 </Menu>
                             </Box>
                             : <Box display={"flex"} alignItems={"center"}>
-                                <MenuItem component={Link} to={'/login'}>
+                                <MenuItem component={Link} to={'/last_words/login'}>
                                     <Typography>Login</Typography>
                                 </MenuItem>
                             </Box>}

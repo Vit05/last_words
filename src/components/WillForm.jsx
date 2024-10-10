@@ -82,12 +82,12 @@ function WillForm() {
         if (isEditing) {
             dispatch(updateRecord({id: recordId, updatedRecord: {...recordData, addresseesRecords, trusteesRecords}}))
                 .then(() => {
-                    navigate('/wills');
+                    navigate('/last_words/wills');
                 });
         } else {
             dispatch(addRecord({...recordData, addresseesRecords, trusteesRecords}))
                 .then(() => {
-                    navigate('/wills');
+                    navigate('/last_words/wills');
                 });
         }
     };
