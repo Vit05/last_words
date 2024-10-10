@@ -4,8 +4,7 @@ import PageHeadTitle from "../components/PageHeadTitle.jsx";
 function HowItWorks() {
     return (
         <Box>
-            <PageHeadTitle title={"A simple and secure process for creating your will"}
-                           navigateTo={-1}/>
+            <PageHeadTitle title={"A simple and secure process for creating your will"}/>
 
             <Box>
                 <dl>

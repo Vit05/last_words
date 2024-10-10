@@ -11,7 +11,7 @@ export const PageHeadTitle = ({title, navigateTo = -1}) => {
             <Box sx={{paddingTop: 2}}>
                 <Button variant="text"
                         color={"dark"}
-                        onClick={() => navigate(`/last_words${navigateTo}`)}
+                        onClick={() => navigate(navigateTo)}
                         startIcon={<ArrowBackIcon fontSize={"large"}/>}>
                     BACK</Button>
             </Box>

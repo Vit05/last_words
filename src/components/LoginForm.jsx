@@ -49,10 +49,9 @@ function LoginForm() {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
     };
-    const headSubtitle = "First time at Leve Last Words? <Typography component={Link} to={'/signup'}>Sign up</Typography>"
     return (
         <Box maxWidth="500px" sx={{margin: "0 auto"}}>
-            <PageHeadTitle title={"Welcome back."} subtitle={headSubtitle}/>
+            <PageHeadTitle title={"Welcome back."}/>
             <Box>
                 <Typography component="p" variant="body1">
                     First time at Leve Last Words? <Typography component={Link} to={'/last_words/signup'}>Sign up</Typography>

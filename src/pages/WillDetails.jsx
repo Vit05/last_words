@@ -36,7 +36,7 @@ function WillDetails() {
 
     return (
         <Box>
-            <PageHeadTitle title={"Record Details"} navigateTo={"/wills"}/>
+            <PageHeadTitle title={"Record Details"} navigateTo={"/last_words/wills"}/>
 
             {record && (
                 <>

@@ -152,7 +152,7 @@ function WillForm() {
 
     return (
         <Box>
-            <PageHeadTitle title={isEditing ? 'Edit Will' : 'Add New Will'} navigateTo={"/wills"}/>
+            <PageHeadTitle title={isEditing ? 'Edit Will' : 'Add New Will'} navigateTo={"/last_words/wills"}/>
 
             <Box>
                 <Stepper activeStep={activeStep} orientation="vertical">

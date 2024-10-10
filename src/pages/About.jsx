@@ -5,6 +5,9 @@ function About() {
     return (
         <Box>
             <PageHeadTitle title={"Our mission is to preserve your legacy"}/>
+            <Box  sx={{paddingY:4}}>
+                <Typography variant="h1" component="h1" gutterBottom></Typography>
+            </Box>
 
             <Box>
                 <Typography variant={"body1"} sx={{marginBottom: { xs: '11px', md: '25px' }}}>We are a team dedicated to creating a safe and confidential way for people to leave their last words and wishes for loved ones. Our app came about after we came across stories of people who wanted to share their last thoughts but didn't know how to go about it. We believe that everyone deserves the opportunity to leave their legacy and message to those they care about.</Typography>
