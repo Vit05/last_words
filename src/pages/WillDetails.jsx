@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Typography, Container, Button, Alert } from '@mui/material';
+import {Typography, Container, Button, Alert, Box} from '@mui/material';
 import { fetchRecord, deleteRecord, clearRecordError } from '../store/authSlice';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from "@mui/material/IconButton";
+import PageHeadTitle from "../components/PageHeadTitle.jsx";
 
 function WillDetails() {
     const { recordId } = useParams();
@@ -32,29 +35,31 @@ function WillDetails() {
     }
 
     return (
-        <Container maxWidth="md">
-            <Typography variant="h4" component="h1" gutterBottom>
-                Record Details
-            </Typography>
+        <Box>
+            <PageHeadTitle title={"Record Details"} navigateTo={"/wills"}/>
+
             {record && (
                 <>
-                    <Typography variant="h6" gutterBottom>
-                        Title: {record.name}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                        Description: {record.desc}
-                    </Typography>
-                    {/* Display other record details here */}
 
-                    <Button component={Link} to={`/wills/${record.id}/edit`} variant="contained" sx={{ mt: 2 }}>
-                        Edit
-                    </Button>
-                    <Button onClick={handleDelete} variant="outlined" color="error" sx={{ mt: 2, ml: 2 }}>
-                        Delete
-                    </Button>
+                    <Box>
+                        <Typography variant="body1" sx={{color: 'text.secondary'}}>
+                            <div
+                                dangerouslySetInnerHTML={{__html: record.desc}}
+                            />
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button component={Link} to={`/wills/${record.id}/edit`} variant="contained" sx={{ mt: 2 }}>
+                            Edit
+                        </Button>
+                        <Button onClick={handleDelete} variant="outlined" color="error" sx={{ mt: 2, ml: 2 }}>
+                            Delete
+                        </Button>
+                    </Box>
+
                 </>
             )}
-        </Container>
+        </Box>
     );
 }
 

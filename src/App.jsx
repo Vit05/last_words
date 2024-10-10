@@ -32,6 +32,8 @@ import {auth} from "./firebase.js";
 import {clearUser, setUser} from "./store/authSlice.js";
 import {useDispatch} from "react-redux";
 import WillForm from "./components/WillForm.jsx";
+import HowItWorks from "./pages/HowItWorks.jsx";
+import Faq from "./pages/Faq.jsx";
 
 
 // import Toolbar from "@mui/material/Toolbar";
@@ -84,29 +86,31 @@ function App() {
             <Router>
 
                 <AppHeader/>
-                <Box marginTop={9}>
+                <Box marginTop={9} paddingBottom={5}>
                     <Container maxWidth="md">
                         <Routes>
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/signup" element={<Signup/>}/>
                             <Route path="/about-us" element={<About/>}/>
+                            <Route path="/how-it-works" element={<HowItWorks/>}/>
+                            <Route path="/faq" element={<Faq/>}/>
                             <Route path="/" element={<Home/>}/>
-                            <Route
-                                path="/dashboard"
-                                element={
-                                    <PrivateRoute>
-                                        <Dashboard/>
-                                    </PrivateRoute>
-                                }
-                            />
-                            <Route
-                                path="/profile"
-                                element={
-                                    <PrivateRoute>
-                                        <Profile/>
-                                    </PrivateRoute>
-                                }
-                            />
+                            {/*<Route*/}
+                            {/*    path="/dashboard"*/}
+                            {/*    element={*/}
+                            {/*        <PrivateRoute>*/}
+                            {/*            <Dashboard/>*/}
+                            {/*        </PrivateRoute>*/}
+                            {/*    }*/}
+                            {/*/>*/}
+                            {/*<Route*/}
+                            {/*    path="/profile"*/}
+                            {/*    element={*/}
+                            {/*        <PrivateRoute>*/}
+                            {/*            <Profile/>*/}
+                            {/*        </PrivateRoute>*/}
+                            {/*    }*/}
+                            {/*/>*/}
                             <Route path="/wills" element={
                                 <PrivateRoute>
                                     <WillsList />

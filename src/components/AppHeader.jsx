@@ -18,16 +18,19 @@ import {useEffect} from "react";
 
 const drawerWidth = 240;
 
-const pages = [{path: "/", name: 'Home'}, {path: "/faq", name: 'FAQ'}, {
-    path: "/About-us",
-    name: 'About Us'
-}, {path: "/contacts", name: 'Contacts'}];
+const pages = [
+    {path: "/", name: 'Home'},
+    {path: "/how-it-works", name: 'How It Works'},
+    {path: "/faq", name: 'FAQ'},
+    {path: "/about-us", name: 'About Us'},
+    // {path: "/contacts", name: 'Contacts'}
+];
 
-const NavigationLinks = () => {
+const  NavigationLinks = () => {
     return (<>
         {pages.map((page) => (
             <MenuItem key={page.name} component={Link} to={page.path}>
-                <Typography>{page.name}</Typography>
+                <Typography variant={"button"}>{page.name}</Typography>
             </MenuItem>
         ))}
     </>)
@@ -63,8 +66,8 @@ export default function AppHeader() {
     };
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{textAlign: 'center'}}>
-            <Typography variant="h6" sx={{my: 2}}>
-                MUI
+            <Typography variant="h6" sx={{my: 0}}>
+                Leave Last Words
             </Typography>
             <Divider/>
             <List>
@@ -100,16 +103,13 @@ export default function AppHeader() {
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{mr: 2, display: {sm: 'none'}}}
+                        sx={{mr: 2, display: {md: 'none'}}}
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                    >LLWs</Typography>
-                    <Box sx={{width: "100%", display: "flex", justifyContent: {xs: 'flex-end', sm: 'space-between'}}}>
-                        <Box sx={{display: {xs: 'none', sm: 'flex'}}}>
+                    <Typography variant="h5" sx={{width: "auto", whiteSpace: "nowrap"}}>LLW</Typography>
+                    <Box sx={{width: "100%", display: "flex", marginLeft: 2, justifyContent: {xs: 'flex-end', md: 'space-between'}}}>
+                        <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                             <NavigationLinks/>
                         </Box>
 
@@ -140,27 +140,23 @@ export default function AppHeader() {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem component={Link} to={'/profile'} onClick={handleClose}>
-                                        <Typography>Profile</Typography>
-                                    </MenuItem>
-                                    <MenuItem component={Link} to={"/dashboard"} onClick={handleClose}>
-                                        <Typography>Dashboard</Typography>
-                                    </MenuItem>
+                                    {/*<MenuItem component={Link} to={'/profile'} onClick={handleClose}>*/}
+                                    {/*    <Typography variant={"button"}>Profile</Typography>*/}
+                                    {/*</MenuItem>*/}
+                                    {/*<MenuItem component={Link} to={"/dashboard"} onClick={handleClose}>*/}
+                                    {/*    <Typography variant={"button"}>Dashboard</Typography>*/}
+                                    {/*</MenuItem>*/}
                                     <MenuItem component={Link} to={"/wills"} onClick={handleClose}>
-                                        <Typography>Wills</Typography>
+                                        <Typography variant={"button"}>Wills</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleLogout}>
-                                        <Typography>Logout</Typography>
+                                        <Typography variant={"button"}>Logout</Typography>
                                     </MenuItem>
                                 </Menu>
                             </Box>
                             : <Box display={"flex"} alignItems={"center"}>
                                 <MenuItem component={Link} to={'/login'}>
                                     <Typography>Login</Typography>
-                                </MenuItem>
-                                <Typography>&nbsp;/&nbsp;</Typography>
-                                <MenuItem component={Link} to={'/signup'}>
-                                    <Typography>Signup</Typography>
                                 </MenuItem>
                             </Box>}
                     </Box>
@@ -175,7 +171,7 @@ export default function AppHeader() {
                     keepMounted: true, // Better open performance on mobile.
                 }}
                 sx={{
-                    display: {xs: 'block', sm: 'none'},
+                    display: {xs: 'block', md: 'none'},
                     '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
                 }}>{drawer}</Drawer>
         </Box>

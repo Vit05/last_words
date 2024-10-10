@@ -41,13 +41,13 @@ const RichTextEditor = ({existingWill, handleWill}) => {
                    value={editorContent}
                    onChange={handleEditorChange}
                    onFocus={handleFocus}
-                   style={{ height: '300px', marginBottom: '40px' }}
+                   style={{ height: '300px', marginBottom: '60px' }}
                />
            </Box>
 
             {isFocused && <Box sx={{ paddingTop: 3 }}>
                 <Button variant="contained" color="primary" onClick={handleSave}>
-                Save
+                Save Step
             </Button>
             </Box>}
         </>

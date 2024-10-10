@@ -1,21 +1,23 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import {
     Typography,
     Button,
-    Container,
     Box,
     Stepper,
     Step,
     StepLabel,
-    Alert, Paper
+    Alert,
+    StepContent
 } from '@mui/material';
 
 import {addRecord, updateRecord, clearRecordError} from '../store/authSlice';
 import AddresseesList from "./AddresseesList.jsx";
 import TrusteesList from "./TrusteesList.jsx";
 import RichTextEditor from "./RichTextEditor.jsx";
+import PageHeadTitle from "./PageHeadTitle.jsx";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const steps = ['How to create Will', 'Write the will.', 'Specify the Addressees', 'Specify the trustees'];
 
@@ -32,15 +34,23 @@ function WillForm() {
     );
 
     const [isSectionValid, setIsSectionValid] = useState(true);
-    const [addresseesRecords, setAddresseesRecords] = useState(existingRecord?.addresseesRecords || [{index:0, name: "", email: ""}]);
+    const [addresseesRecords, setAddresseesRecords] = useState(existingRecord?.addresseesRecords || [{
+        index: 0,
+        name: "",
+        email: ""
+    }]);
     const [willContent, setWillContent] = useState(existingRecord?.desc || "");
-    const [trusteesRecords, setTrusteesRecords] = useState(existingRecord?.trusteesRecords || [{index:0, name: "", email: "", phone:""}]);
+    const [trusteesRecords, setTrusteesRecords] = useState(existingRecord?.trusteesRecords || [{
+        index: 0,
+        name: "",
+        email: "",
+        phone: ""
+    }]);
     const [recordData, setRecordData] = useState(
         isEditing ?
             existingRecord
             : {name: '', desc: '', addresseesRecords: addresseesRecords, trusteesRecords: trusteesRecords}
     );
-
 
     const handleStepValidation = (newValue) => {
         setIsSectionValid(newValue);
@@ -59,7 +69,7 @@ function WillForm() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const onWillContentChanged = (willContent, isValid)=>{
+    const onWillContentChanged = (willContent, isValid) => {
         setWillContent(willContent)
         setRecordData({
             ...recordData,
@@ -70,7 +80,6 @@ function WillForm() {
 
     const handleSubmit = () => {
         if (isEditing) {
-            console.log(recordData);
             dispatch(updateRecord({id: recordId, updatedRecord: {...recordData, addresseesRecords, trusteesRecords}}))
                 .then(() => {
                     navigate('/wills');
@@ -83,39 +92,32 @@ function WillForm() {
         }
     };
 
-
-
     const getStepContent = (step) => {
         switch (step) {
             case 0:
                 return (
-                    <Box sx={{mb: 2}}>
+                    <Box sx={{paddingY: 2}}>
                         <Typography variant={"h5"} mb={3}>In order to leave a will you need to:</Typography>
                         <ol>
                             <li><span>Write a will</span></li>
                             <li><span>Specify to whom it will be addressed</span></li>
                             <li><span>Specify the trustees</span>
-                            <p>This is the person or persons who will be able to confirm and start the process of sending
-                                the will to the addressee.</p></li>
+                                <p>This is the person or persons who will be able to confirm and start the process of
+                                    sending
+                                    the will to the addressee.</p></li>
                         </ol>
-
                     </Box>
                 );
             case 1:
                 return (
-                    <Box sx={{mb: 2}}>
-                        <Typography variant={"h5"} mb={3}>Write the will</Typography>
-
-                       <Box>
-                           <RichTextEditor handleWill={onWillContentChanged}
-                                           existingWill={willContent}/>
-                       </Box>
+                    <Box sx={{paddingY: 2}}>
+                        <RichTextEditor handleWill={onWillContentChanged} existingWill={willContent}/>
                     </Box>
                 );
             case 2:
                 return (
-                    <Box sx={{mb: 2}}>
-                        <Typography variant={"h5"} mb={3}>Specify the Addressee</Typography>
+                    <Box sx={{paddingY: 2}}>
+                        {/*<Typography variant={"h5"} mb={3}>Specify the Addressee</Typography>*/}
                         <AddresseesList existingRecords={addresseesRecords}
                                         onRecordsChange={handleUpdateAddresseesRecords}
                                         onValidStep={handleStepValidation}/>
@@ -123,10 +125,9 @@ function WillForm() {
                 );
             case 3:
                 return (
-                    <Box sx={{mb: 2}}>
-                        <Typography variant={"h5"} mb={3}>Specify the Trustees</Typography>
-                        <TrusteesList existingRecords={trusteesRecords}
-                                      onRecordsChange={handleUpdateTrusteesRecords}
+                    <Box sx={{paddingY: 2}}>
+                        {/*<Typography variant={"h5"} mb={3}>Specify the Trustees</Typography>*/}
+                        <TrusteesList existingRecords={trusteesRecords} onRecordsChange={handleUpdateTrusteesRecords}
                                       onValidStep={handleStepValidation}/>
                     </Box>
                 );
@@ -137,56 +138,74 @@ function WillForm() {
 
     const [activeStep, setActiveStep] = useState(0);
 
-
     useEffect(() => {
-        if(activeStep === 0) {
+        if (activeStep === 0) {
             setIsSectionValid(true)
         }
+    }, [activeStep, handleNext])
 
-    },[activeStep, handleNext])
+    useEffect(() => {
+        if (isEditing) {
+            setActiveStep(1)
+        }
+    }, [isEditing])
+
     return (
-        <Container maxWidth="md">
-            <Typography variant="h4" component="h1" gutterBottom>
-                {isEditing ? 'Edit Record' : 'Add New Record'}
-            </Typography>
+        <Box>
+            <PageHeadTitle title={isEditing ? 'Edit Will' : 'Add New Will'} navigateTo={"/wills"}/>
 
-            <Stepper activeStep={activeStep}>
-                {steps.map((label) => (
-                    <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                    </Step>
-                ))}
-            </Stepper>
+            <Box>
+                <Stepper activeStep={activeStep} orientation="vertical">
+                    {steps.map((label, index) => (
+                        <Step key={label}>
+                            <StepLabel><Typography variant={"h4"}>{label}</Typography></StepLabel>
+                            <StepContent>
+                                    {getStepContent(index)}
+                                {error && <Alert severity="error"
+                                                 onClose={() => dispatch(clearRecordError())}>{error}</Alert>}
+                                <Box sx={{display: 'flex', justifyContent: 'space-between', paddingY: 3}}>
+                                    {activeStep !== 0 ? <Button disabled={activeStep === 0}
+                                                                size={'large'}
+                                                                color={'dark'}
+                                                                startIcon={<ArrowBackIcon fontSize={"large"}/>}
+                                                                onClick={handleBack}>
+                                        Back
+                                    </Button> : <div></div>}
+                                    {activeStep === steps.length - 1 ? (
+                                        <Button disabled={!isSectionValid || isLoading} variant="contained"
+                                                onClick={handleSubmit}>
+                                            {isLoading ? 'Saving...' : isEditing ? 'Update Will' : 'Save'}
+                                        </Button>
+                                    ) : (
+                                        <Button disabled={!isSectionValid} color={'dark'}
+                                                size={'large'}
+                                                sx={{
+                                                    color: "#ffffff",
+                                                    backgroundColor: "#000000",
+                                                    '&:hover': {
+                                                        backgroundColor: "rgba(0,0,0,0.7)",
+                                                    },
+                                                }}
+                                                variant="contained" onClick={handleNext}>
+                                            Next
+                                        </Button>
+                                    )}
+                                </Box>
+                            </StepContent>
+                        </Step>
+                    ))}
+                </Stepper>
 
-            <Box sx={{mt: 4}}>
-                {activeStep === steps.length ? (
+            </Box>
+
+            <Box>
+                {activeStep === steps.length && (
                     <Typography>
                         {isEditing ? 'Record updated successfully!' : 'Record submitted successfully!'}
                     </Typography>
-                ) : (
-                    <>
-                        <Paper square={false} sx={{padding: 4}}>
-                            {getStepContent(activeStep)}
-                        </Paper>
-                        {error && <Alert severity="error" onClose={() => dispatch(clearRecordError())}>{error}</Alert>}
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', paddingY: 3}}>
-                            <Button disabled={activeStep === 0} onClick={handleBack}>
-                                Back
-                            </Button>
-                            {activeStep === steps.length - 1 ? (
-                                <Button disabled={!isSectionValid || isLoading} variant="contained" onClick={handleSubmit}>
-                                    {isLoading ? 'Submitting...' : isEditing ? 'Update Record' : 'Submit'}
-                                </Button>
-                            ) : (
-                                <Button disabled={!isSectionValid} variant="contained" onClick={handleNext}>
-                                    Next
-                                </Button>
-                            )}
-                        </Box>
-                    </>
                 )}
             </Box>
-        </Container>
+        </Box>
     );
 }
 

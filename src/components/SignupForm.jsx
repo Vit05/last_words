@@ -55,13 +55,15 @@ function SignupForm() {
     };
 
     return (
-        <Container maxWidth="xs">
-            <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography component="h1" variant="h5">
-                    Sign up
+        <Box maxWidth="500px" sx={{margin: "0 auto"}}>
+            <Box sx={{paddingY:4}}>
+                <Typography component="h1" variant="h1">
+                    Sign Up
                 </Typography>
+            </Box>
+            <Box sx={{ marginTop: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {error && <Alert severity="error">{error}</Alert>}
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                     <TextField
                         margin="normal"
                         required
@@ -117,12 +119,12 @@ function SignupForm() {
                             confirmPassword.length > 0 && confirmPassword !== password && 'Passwords do not match'
                         }
                     />
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isLoading}>
+                    <Button type="submit" size={"large"}  fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isLoading}>
                         {isLoading ? 'Signing up...' : 'Sign Up'}
                     </Button>
                 </form>
             </Box>
-        </Container>
+        </Box>
     );
 }
 
